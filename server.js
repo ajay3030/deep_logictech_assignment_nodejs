@@ -24,24 +24,24 @@ const req = https.request("https://time.com", (res) => {
     // Parsing the Required Data
     const API_DATA = [];
     //Iterate over Each Element
-    arr.map((data) => {
+    for(i=0;i<=5;i++){
       // Refining Links
-      link_s = data.search('<a href="'); // Start Location of Link Endpoint
-      link_e = data.search('/"'); // End Location Of Link Endpoint
-      link_raw = data.slice(link_s + '<a href="'.length, link_e); // Article Endpoint
+      link_s = arr[i].search('<a href="'); // Start Location of Link Endpoint
+      link_e = arr[i].search('/"'); // End Location Of Link Endpoint
+      link_raw = arr[i].slice(link_s + '<a href="'.length, link_e); // Article Endpoint
       url = "https://time.com" + link_raw; // Concatenate to Make URL
 
       //Refining Headings
-      head_s = data.search('<h3 class="latest-stories__item-headline">'); // Start Location of Heading
-      head_e = data.search("</h3>"); // End Location Of Heading
-      heading = data.slice(
+      head_s = arr[i].search('<h3 class="latest-stories__item-headline">'); // Start Location of Heading
+      head_e = arr[i].search("</h3>"); // End Location Of Heading
+      heading = arr[i].slice(
         head_s + '<h3 class="latest-stories__item-headline">'.length,
         head_e
       );// Heading of Article
 
       const DATA_OBJ = { title: heading, link: url }; // JSON Object of URL , Heading
       API_DATA.push(DATA_OBJ); // Push Operation on Array
-    });
+      }
     // Creating Server to send Data
     const server = http.createServer((req, res) => {
       res.statusCode = 200;
