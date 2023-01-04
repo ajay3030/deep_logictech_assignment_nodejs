@@ -9,39 +9,39 @@ const req = https.request("https://time.com", (res) => {
   res.on("end", () => {
     // Clearing the Dump
     const dump_str = data.join(); // All The WebPage as String
-    const dump_start = dump_str.search(
+    const dump_start = dump_str.indexOf(
       '<h2 class="latest-stories__heading">Latest Stories</h2>'
     ); // Nearest Start of Required Data
-    const dump_end = dump_str.search("homepage-section-v2 mag-subs"); //Nearest End of Required Data
+    const dump_end = dump_str.indexOf("homepage-section-v2 mag-subs"); //Nearest End of Required Data
     const res_str = dump_str.slice(dump_start, dump_end); // Compartively Cleaner Data
 
     //Refining The Required Data
-    const pos_start = res_str.search("<ul>"); // Start Location of Required Data
-    const pos_end = res_str.search("</ul>"); // End Location Of Required Data
+    const pos_start = res_str.indexOf("<ul>"); // Start Location of Required Data
+    const pos_end = res_str.indexOf("</ul>"); // End Location Of Required Data
     const final_data = res_str.slice(pos_start + 4, pos_end); // Retrive Final Data
     const arr = final_data.split("</li>"); // Split into Array of Indivisual Elements
 
     // Parsing the Required Data
     const API_DATA = [];
     //Iterate over Each Element
-    for(i=0;i<=5;i++){
+    for (i = 0; i <= 5; i++) {
       // Refining Links
-      link_s = arr[i].search('<a href="'); // Start Location of Link Endpoint
-      link_e = arr[i].search('/"'); // End Location Of Link Endpoint
+      link_s = arr[i].indexOf('<a href="'); // Start Location of Link Endpoint
+      link_e = arr[i].indexOf('/"'); // End Location Of Link Endpoint
       link_raw = arr[i].slice(link_s + '<a href="'.length, link_e); // Article Endpoint
       url = "https://time.com" + link_raw; // Concatenate to Make URL
 
       //Refining Headings
-      head_s = arr[i].search('<h3 class="latest-stories__item-headline">'); // Start Location of Heading
-      head_e = arr[i].search("</h3>"); // End Location Of Heading
+      head_s = arr[i].indexOf('<h3 class="latest-stories__item-headline">'); // Start Location of Heading
+      head_e = arr[i].indexOf("</h3>"); // End Location Of Heading
       heading = arr[i].slice(
         head_s + '<h3 class="latest-stories__item-headline">'.length,
         head_e
-      );// Heading of Article
+      ); // Heading of Article
 
       const DATA_OBJ = { title: heading, link: url }; // JSON Object of URL , Heading
       API_DATA.push(DATA_OBJ); // Push Operation on Array
-      }
+    }
     // Creating Server to send Data
     const server = http.createServer((req, res) => {
       res.statusCode = 200;
